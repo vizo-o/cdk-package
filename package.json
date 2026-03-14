@@ -2,7 +2,10 @@
   "name": "@vizo-o/cdk-package",
   "version": "0.1.1",
   "exports": {
-    "./constructs": "./dist/lib/constructs/index.js"
+    "./constructs": {
+      "types": "./dist/lib/constructs/index.d.ts",
+      "default": "./dist/lib/constructs/index.js"
+    }
   },
   "scripts": {
     "build": "tsc",
