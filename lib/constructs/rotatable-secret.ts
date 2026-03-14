@@ -158,7 +158,7 @@ export class RotatableSecret extends Construct {
         // Use the compiled JS file from the dist folder (TypeScript files aren't published)
         // NodejsFunction will bundle this JavaScript file
         const lambdaHandlerPath = path.join(
-            path.dirname(require.resolve('@vizo-o/vizo-package-cdk/constructs')),
+            path.dirname(require.resolve('@vizo-o/cdk-package/constructs')),
             'rotation-lambda',
             'index.js',
         )

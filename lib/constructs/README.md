@@ -14,7 +14,7 @@ A reusable CDK construct for creating AWS Secrets Manager secrets with automatic
 ### NextAuth Secret (Dual-Secret Rotation)
 
 ```typescript
-import { RotatableSecret, RotationStrategy } from '@vizo-o/vizo-package-cdk/constructs'
+import { RotatableSecret, RotationStrategy } from '@vizo-o/cdk-package/constructs'
 import { Duration } from 'aws-cdk-lib'
 
 // In your CDK stack
