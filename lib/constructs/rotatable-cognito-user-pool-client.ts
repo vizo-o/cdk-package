@@ -221,7 +221,7 @@ export class RotatableCognitoUserPoolClient extends Construct {
         )
 
         const lambdaHandlerPath = path.join(
-            path.dirname(require.resolve('@vizo-o/vizo-package-cdk/constructs')),
+            path.dirname(require.resolve('@vizo-o/cdk-package/constructs')),
             'cognito-client-rotation-lambda',
             'index.js',
         )
