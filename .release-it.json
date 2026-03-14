@@ -1,0 +1,17 @@
+{
+    "hooks": {
+        "before:init": "npm run build",
+        "after:commit": "git tag ${version} 2>/dev/null || echo 'Tag ${version} already exists'",
+        "after:release": "git push origin ${version} 2>/dev/null || echo 'Tag ${version} push skipped'"
+    },
+    "git": {
+        "tag": false,
+        "requireCleanWorkingDir": false,
+        "requireUpstream": false,
+        "requireCommits": false,
+        "push": true
+    },
+    "npm": {
+        "publish": true
+    }
+}

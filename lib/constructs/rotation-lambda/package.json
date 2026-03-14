@@ -1,0 +1,11 @@
+{
+  "name": "rotation-lambda",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.1000.0"
+  },
+  "overrides": {
+    "fast-xml-parser": ">=5.3.8"
+  }
+}
