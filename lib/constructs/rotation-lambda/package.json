@@ -6,6 +6,6 @@
     "@aws-sdk/client-secrets-manager": "^3.1000.0"
   },
   "overrides": {
-    "fast-xml-parser": ">=5.3.8"
+    "fast-xml-parser": "5.5.6"
   }
 }
