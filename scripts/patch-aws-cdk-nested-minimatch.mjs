@@ -38,23 +38,30 @@
  * - CDK tests and consuming CDK apps still pass.
  *
  * Until then, keep it: removing it may restore a vulnerable nested copy in some npm layouts.
+ *
+ * `brace-expansion`: same pattern — aws-cdk-lib can nest a vulnerable copy; replace
+ * it with the hoisted `node_modules/brace-expansion` when both exist.
  */
 import fs from 'node:fs'
 import path from 'node:path'
 
 const root = process.cwd()
-const nestedMinimatch = path.join(
-    root,
-    'node_modules',
-    'aws-cdk-lib',
-    'node_modules',
-    'minimatch',
-)
-const rootMinimatch = path.join(root, 'node_modules', 'minimatch')
 
-if (!fs.existsSync(nestedMinimatch) || !fs.existsSync(rootMinimatch)) {
-    process.exit(0)
+function syncNestedPackage(nestedName) {
+    const nested = path.join(
+        root,
+        'node_modules',
+        'aws-cdk-lib',
+        'node_modules',
+        nestedName,
+    )
+    const hoisted = path.join(root, 'node_modules', nestedName)
+    if (!fs.existsSync(nested) || !fs.existsSync(hoisted)) {
+        return
+    }
+    fs.rmSync(nested, { recursive: true })
+    fs.cpSync(hoisted, nested, { recursive: true })
 }
 
-fs.rmSync(nestedMinimatch, { recursive: true })
-fs.cpSync(rootMinimatch, nestedMinimatch, { recursive: true })
+syncNestedPackage('minimatch')
+syncNestedPackage('brace-expansion')

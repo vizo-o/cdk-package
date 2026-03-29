@@ -1,6 +1,6 @@
 {
     "name": "@vizo-o/cdk-package",
-    "version": "0.1.12",
+    "version": "0.1.13",
     "exports": {
         "./constructs": {
             "types": "./dist/lib/constructs/index.d.ts",
@@ -31,7 +31,7 @@
         "@types/node": "22.10.1",
         "@typescript-eslint/eslint-plugin": "^8.18.2",
         "@typescript-eslint/parser": "^8.18.2",
-        "@vizo-o/dev-tools": "^1.0.50",
+        "@vizo-o/dev-tools": "^1.0.54",
         "aws-cdk": "2.1114.1",
         "aws-cdk-lib": "2.245.0",
         "constructs": "10.5.0",
@@ -76,7 +76,8 @@
         "braces": "3.0.3",
         "undici": ">=6.24.0",
         "aws-cdk-lib": {
-            "minimatch": "10.2.3"
+            "minimatch": "10.2.3",
+            "brace-expansion": "5.0.5"
         }
     }
 }
