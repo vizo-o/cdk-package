@@ -8,7 +8,7 @@ import {
 import {
     GetSecretValueCommand,
     PutSecretValueCommand,
-    SecretsManagerClient
+    SecretsManagerClient,
 } from '@aws-sdk/client-secrets-manager'
 import {
     GetParameterCommand,
@@ -93,7 +93,12 @@ export async function handler(event: {
                 break
 
             case 'testSecret':
-                await testSecret(secretArn, token, clientIdParameter, userPoolId)
+                await testSecret(
+                    secretArn,
+                    token,
+                    clientIdParameter,
+                    userPoolId,
+                )
                 break
 
             case 'finishSecret':
@@ -199,8 +204,7 @@ async function createSecret(
             TokenValidityUnits: currentClient.TokenValidityUnits,
             ReadAttributes: currentClient.ReadAttributes,
             WriteAttributes: currentClient.WriteAttributes,
-            EnableTokenRevocation:
-                currentClient.EnableTokenRevocation || false,
+            EnableTokenRevocation: currentClient.EnableTokenRevocation || false,
             PreventUserExistenceErrors:
                 currentClient.PreventUserExistenceErrors || 'LEGACY',
         }),
@@ -387,7 +391,11 @@ function getClientsToKeep(
     toKeep.add(currentClientId)
 
     // Keep old client if overlap period hasn't expired
-    if (oldClientId && !overlapPeriodExpired && oldClientId !== currentClientId) {
+    if (
+        oldClientId &&
+        !overlapPeriodExpired &&
+        oldClientId !== currentClientId
+    ) {
         toKeep.add(oldClientId)
     }
 
@@ -421,7 +429,9 @@ async function deleteClientSafely(
             error instanceof Error &&
             error.message.includes('does not exist')
         ) {
-            console.log(`${description} ${clientId} already deleted, continuing...`)
+            console.log(
+                `${description} ${clientId} already deleted, continuing...`,
+            )
         } else {
             console.error(`Failed to delete ${description} ${clientId}:`, error)
             throw error
@@ -462,9 +472,7 @@ async function finishSecret(
 
     // Get current and pending secrets
     const [currentSecret, pendingSecret] = await Promise.all([
-        secretsManager.send(
-            new GetSecretValueCommand({ SecretId: secretArn }),
-        ),
+        secretsManager.send(new GetSecretValueCommand({ SecretId: secretArn })),
         secretsManager.send(
             new GetSecretValueCommand({
                 SecretId: secretArn,
@@ -490,6 +498,7 @@ async function finishSecret(
             pendingSecret.SecretString,
         )
         console.log('Rotation finished - no client ID found in secret')
+
         return
     }
 

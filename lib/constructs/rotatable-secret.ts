@@ -118,11 +118,7 @@ export class RotatableSecret extends Construct {
     public readonly secret: secretsmanager.Secret
     public readonly rotationLambda: lambda.Function
 
-    constructor(
-        scope: Construct,
-        id: string,
-        props: RotatableSecretProps,
-    ) {
+    constructor(scope: Construct, id: string, props: RotatableSecretProps) {
         super(scope, id)
 
         const {
@@ -136,22 +132,22 @@ export class RotatableSecret extends Construct {
         } = props
 
         // Build full secret name
-        const fullSecretName = appName && environment
-            ? `/${appName}/${environment}/${secretName}`
-            : secretName
+        const fullSecretName =
+            appName && environment
+                ? `/${appName}/${environment}/${secretName}`
+                : secretName
 
         // Create the secret
         this.secret = new secretsmanager.Secret(this, 'Secret', {
             secretName: fullSecretName,
             description,
             removalPolicy,
-            generateSecretString:
-                rotationConfig.generateSecretString || {
-                    secretStringTemplate: JSON.stringify({}),
-                    generateStringKey: 'current',
-                    excludeCharacters: '"@/\\',
-                    passwordLength: 64,
-                },
+            generateSecretString: rotationConfig.generateSecretString || {
+                secretStringTemplate: JSON.stringify({}),
+                generateStringKey: 'current',
+                excludeCharacters: '"@/\\',
+                passwordLength: 64,
+            },
         })
 
         // Create rotation Lambda function
@@ -162,13 +158,13 @@ export class RotatableSecret extends Construct {
             'rotation-lambda',
             'index.js',
         )
-        
+
         // Create log group with retention policy
         const logGroup = new logs.LogGroup(this, 'RotationLambdaLogGroup', {
             retention: logs.RetentionDays.ONE_MONTH,
             removalPolicy: RemovalPolicy.DESTROY,
         })
-        
+
         this.rotationLambda = new NodejsFunction(this, 'RotationLambda', {
             runtime: lambda.Runtime.NODEJS_20_X,
             entry: lambdaHandlerPath,
@@ -180,7 +176,9 @@ export class RotatableSecret extends Construct {
             environment: {
                 ROTATION_STRATEGY: rotationConfig.strategy,
                 OVERLAP_PERIOD_DAYS: String(
-                    (rotationConfig.overlapPeriod || Duration.days(30)).toDays(),
+                    (
+                        rotationConfig.overlapPeriod || Duration.days(30)
+                    ).toDays(),
                 ),
             },
         })

@@ -1,9 +1,8 @@
+import type { IManagedPolicy, IPrincipal } from 'aws-cdk-lib/aws-iam'
 import {
     ArnPrincipal,
     CompositePrincipal,
     Effect,
-    IManagedPolicy,
-    IPrincipal,
     ManagedPolicy,
     PolicyDocument,
     PolicyStatement,

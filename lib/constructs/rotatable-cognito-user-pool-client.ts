@@ -110,7 +110,7 @@ export interface RotatableCognitoUserPoolClientProps {
  *
  * The User Pool Client itself is NOT created by CDK - it must be created by a
  * post-deployment script that reads the configuration from SSM and creates the client.
- * 
+ *
  * @example
  * ```typescript
  * const rotatableClient = new RotatableCognitoUserPoolClient(this, 'CognitoClient', {
@@ -160,9 +160,10 @@ export class RotatableCognitoUserPoolClient extends Construct {
             refreshTokenValidityDays = 30,
         } = props
 
-        const fullSecretName = appName && environment
-            ? `/${appName}/${environment}/cognito-client-secret`
-            : `cognito-client-secret`
+        const fullSecretName =
+            appName && environment
+                ? `/${appName}/${environment}/cognito-client-secret`
+                : 'cognito-client-secret'
 
         this.secret = new secretsmanager.Secret(this, 'ClientSecret', {
             secretName: fullSecretName,
@@ -184,9 +185,10 @@ export class RotatableCognitoUserPoolClient extends Construct {
             this,
             'ClientConfigParameter',
             {
-                parameterName: appName && environment
-                    ? `/${appName}/${environment}/cognito/client-config`
-                    : `/cognito/${clientName}/client-config`,
+                parameterName:
+                    appName && environment
+                        ? `/${appName}/${environment}/cognito/client-config`
+                        : `/cognito/${clientName}/client-config`,
                 stringValue: JSON.stringify({
                     userPoolId,
                     clientName,
@@ -200,21 +202,27 @@ export class RotatableCognitoUserPoolClient extends Construct {
             },
         )
 
-        this.clientIdParameter = new StringParameter(this, 'ClientIdParameter', {
-            parameterName: appName && environment
-                ? `/${appName}/cognito/user-pool-client-id`
-                : `/cognito/${clientName}/user-pool-client-id`,
-            stringValue: 'PLACEHOLDER',
-            description: 'Cognito User Pool Client ID',
-        })
+        this.clientIdParameter = new StringParameter(
+            this,
+            'ClientIdParameter',
+            {
+                parameterName:
+                    appName && environment
+                        ? `/${appName}/cognito/user-pool-client-id`
+                        : `/cognito/${clientName}/user-pool-client-id`,
+                stringValue: 'PLACEHOLDER',
+                description: 'Cognito User Pool Client ID',
+            },
+        )
 
         this.clientSecretArnParameter = new StringParameter(
             this,
             'ClientSecretArnParameter',
             {
-                parameterName: appName && environment
-                    ? `/${appName}/cognito/client-secret-arn`
-                    : `/cognito/${clientName}/client-secret-arn`,
+                parameterName:
+                    appName && environment
+                        ? `/${appName}/cognito/client-secret-arn`
+                        : `/cognito/${clientName}/client-secret-arn`,
                 stringValue: this.secret.secretArn,
                 description: 'ARN of Cognito Client Secret in Secrets Manager',
             },
@@ -225,39 +233,34 @@ export class RotatableCognitoUserPoolClient extends Construct {
             'cognito-client-rotation-lambda',
             'index.js',
         )
-        
+
         // Create log group with retention policy
         const logGroup = new logs.LogGroup(this, 'RotationLambdaLogGroup', {
             retention: logs.RetentionDays.ONE_MONTH,
             removalPolicy: RemovalPolicy.DESTROY,
         })
-        
-        this.rotationLambda = new NodejsFunction(
-            this,
-            'RotationLambda',
-            {
-                runtime: lambda.Runtime.NODEJS_20_X,
-                entry: lambdaHandlerPath,
-                handler: 'handler',
-                timeout: Duration.minutes(5),
-                memorySize: 512,
-                description: `Rotation function for Cognito User Pool Client ${clientName}`,
-                logGroup,
-                environment: {
-                    USER_POOL_ID: userPoolId,
-                    CLIENT_NAME: clientName,
-                    SECRET_ARN: this.secret.secretArn,
-                    CLIENT_CONFIG_PARAMETER: configParameter.parameterName,
-                    CLIENT_ID_PARAMETER: this.clientIdParameter.parameterName,
-                    OVERLAP_PERIOD_DAYS: String(
-                        (
-                            rotationConfig.overlapPeriod ||
-                            Duration.days(30)
-                        ).toDays(),
-                    ),
-                },
+
+        this.rotationLambda = new NodejsFunction(this, 'RotationLambda', {
+            runtime: lambda.Runtime.NODEJS_20_X,
+            entry: lambdaHandlerPath,
+            handler: 'handler',
+            timeout: Duration.minutes(5),
+            memorySize: 512,
+            description: `Rotation function for Cognito User Pool Client ${clientName}`,
+            logGroup,
+            environment: {
+                USER_POOL_ID: userPoolId,
+                CLIENT_NAME: clientName,
+                SECRET_ARN: this.secret.secretArn,
+                CLIENT_CONFIG_PARAMETER: configParameter.parameterName,
+                CLIENT_ID_PARAMETER: this.clientIdParameter.parameterName,
+                OVERLAP_PERIOD_DAYS: String(
+                    (
+                        rotationConfig.overlapPeriod || Duration.days(30)
+                    ).toDays(),
+                ),
             },
-        )
+        })
 
         this.secret.grantRead(this.rotationLambda)
         this.secret.grantWrite(this.rotationLambda)

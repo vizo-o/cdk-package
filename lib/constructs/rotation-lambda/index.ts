@@ -27,11 +27,7 @@ function parseSecretValue(secretString: string): {
 } {
     try {
         const parsed = JSON.parse(secretString)
-        if (
-            parsed &&
-            typeof parsed === 'object' &&
-            'current' in parsed
-        ) {
+        if (parsed && typeof parsed === 'object' && 'current' in parsed) {
             return {
                 current: parsed.current,
                 previous: parsed.previous || null,
@@ -74,8 +70,7 @@ export async function handler(event: {
     const token = event.ClientRequestToken
     const step = event.Step
 
-    const rotationStrategy =
-        process.env.ROTATION_STRATEGY || 'DUAL_SECRET'
+    const rotationStrategy = process.env.ROTATION_STRATEGY || 'DUAL_SECRET'
     const overlapPeriodDays = parseInt(
         process.env.OVERLAP_PERIOD_DAYS || '30',
         10,
@@ -153,9 +148,7 @@ async function createSecret(
         throw new Error('Current secret has no value')
     }
 
-    const { current, previous } = parseSecretValue(
-        currentSecret.SecretString,
-    )
+    const { current } = parseSecretValue(currentSecret.SecretString)
 
     // Generate new secret
     const newSecret = generateSecret(64)
@@ -185,8 +178,8 @@ async function createSecret(
  */
 async function setSecret(
     secretArn: string,
-    token: string,
-    strategy: string,
+    _token: string,
+    _strategy: string,
 ): Promise<void> {
     console.log(`Setting secret value for ${secretArn}`)
 
@@ -239,6 +232,7 @@ async function finishSecret(
             }),
         )
         console.log('Rotation finished - immediate strategy')
+
         return
     }
 
@@ -273,8 +267,7 @@ async function finishSecret(
             const createdDate = versionSecret.CreatedDate
             if (createdDate) {
                 const daysSinceCreation =
-                    (Date.now() - createdDate.getTime()) /
-                    (1000 * 60 * 60 * 24)
+                    (Date.now() - createdDate.getTime()) / (1000 * 60 * 60 * 24)
 
                 // If overlap period has passed, remove previous secret
                 if (daysSinceCreation >= overlapPeriodDays) {
@@ -285,11 +278,14 @@ async function finishSecret(
                         new PutSecretValueCommand({
                             SecretId: secretArn,
                             ClientRequestToken: token,
-                            SecretString: formatSecretValue(secretValue.current),
+                            SecretString: formatSecretValue(
+                                secretValue.current,
+                            ),
                             VersionStages: ['AWSCURRENT'],
                         }),
                     )
                     console.log('Previous secret removed')
+
                     return
                 }
 
