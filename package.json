@@ -1,6 +1,6 @@
 {
     "name": "@vizo-o/cdk-package",
-    "version": "0.1.13",
+    "version": "0.1.14",
     "exports": {
         "./constructs": {
             "types": "./dist/lib/constructs/index.d.ts",
