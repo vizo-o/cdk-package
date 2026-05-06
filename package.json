@@ -31,7 +31,7 @@
         "@types/node": "22.10.1",
         "@typescript-eslint/eslint-plugin": "^8.18.2",
         "@typescript-eslint/parser": "^8.18.2",
-        "@vizo-o/dev-tools": "^1.0.54",
+        "@vizo-o/dev-tools": "^1.0.56",
         "aws-cdk": "2.1114.1",
         "aws-cdk-lib": "2.245.0",
         "constructs": "10.5.0",
