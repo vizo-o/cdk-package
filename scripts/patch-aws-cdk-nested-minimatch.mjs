@@ -41,6 +41,9 @@
  *
  * `brace-expansion`: same pattern — aws-cdk-lib can nest a vulnerable copy; replace
  * it with the hoisted `node_modules/brace-expansion` when both exist.
+ *
+ * `fast-uri`: same pattern — aws-cdk-lib → table → ajv nests fast-uri@3.1.0; replace
+ * with hoisted `node_modules/fast-uri` when both exist.
  */
 import fs from 'node:fs'
 import path from 'node:path'
@@ -65,3 +68,4 @@ function syncNestedPackage(nestedName) {
 
 syncNestedPackage('minimatch')
 syncNestedPackage('brace-expansion')
+syncNestedPackage('fast-uri')
