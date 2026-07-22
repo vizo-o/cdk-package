@@ -20,6 +20,7 @@ const kebabToPascal = (kebab: string) => {
 
 interface CICDRoleProps {
     repoName: string
+    additionalRepoNames?: string[]
     inlinePolicies?: { [name: string]: PolicyDocument }
     managedPolicies?: IManagedPolicy[]
 }
@@ -30,7 +31,12 @@ export class CICDRole extends Construct {
     constructor(
         scope: Construct,
         id: string,
-        { repoName, managedPolicies, inlinePolicies }: CICDRoleProps,
+        {
+            repoName,
+            additionalRepoNames,
+            managedPolicies,
+            inlinePolicies,
+        }: CICDRoleProps,
     ) {
         super(scope, id)
 
@@ -43,11 +49,14 @@ export class CICDRole extends Construct {
             Stack.of(this).account
         }:oidc-provider/${githubDomain}`
 
+        const trustedRepos = [repoName, ...(additionalRepoNames ?? [])]
         const githubActionsPrincipal = new WebIdentityPrincipal(
             githubProviderArn,
             {
                 StringLike: {
-                    [`${githubDomain}:sub`]: [`repo:vizo-o/${repoName}:*`],
+                    [`${githubDomain}:sub`]: trustedRepos.map(
+                        (name) => `repo:vizo-o/${name}:*`,
+                    ),
                 },
                 StringEquals: {
                     'token.actions.githubusercontent.com:aud': stsClientId,
