@@ -34,7 +34,7 @@
         "@vizo-o/dev-tools": "^1.0.57",
         "aws-cdk": "2.1127.0",
         "aws-cdk-lib": "2.261.0",
-        "brace-expansion": "5.0.7",
+        "brace-expansion": "5.0.8",
         "constructs": "10.5.0",
         "eslint": "^9.17.0",
         "eslint-plugin-prettier": "^5.2.1",
@@ -72,17 +72,17 @@
     },
     "overrides": {
         "lodash": ">=4.17.24",
-        "brace-expansion": "5.0.7",
+        "brace-expansion": "5.0.8",
         "minimatch": "10.2.3",
         "fast-xml-parser": ">=5.8.0",
         "fast-xml-builder": ">=1.2.0",
         "fast-uri": "4.1.1",
         "braces": "3.0.3",
         "undici": ">=7.28.0 <8.0.0",
-        "js-yaml": ">=4.3.0",
+        "js-yaml": ">=5.2.2",
         "aws-cdk-lib": {
             "minimatch": "10.2.3",
-            "brace-expansion": "5.0.7",
+            "brace-expansion": "5.0.8",
             "fast-uri": "4.0.0"
         }
     }
