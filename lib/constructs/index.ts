@@ -1,4 +1,5 @@
 export * from './cicd-role'
+export * from '../api-gateway-health-smoke-iam'
 export * from './migration-artifacts-iam'
 export * from './migration-runner-iam'
 export * from './rotatable-cognito-user-pool-client'
