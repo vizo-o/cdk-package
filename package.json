@@ -31,7 +31,7 @@
         "@types/jest": "^29.5.14",
         "@types/node": "22.10.1",
         "@typescript/native-preview": "^7.0.0-dev",
-        "@vizo-o/dev-tools": "^1.0.64",
+        "@vizo-o/dev-tools": "^1.0.66",
         "aws-cdk": "2.1127.0",
         "aws-cdk-lib": "2.261.0",
         "brace-expansion": "5.0.9",
