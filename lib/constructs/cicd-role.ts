@@ -54,9 +54,10 @@ export class CICDRole extends Construct {
             githubProviderArn,
             {
                 StringLike: {
-                    [`${githubDomain}:sub`]: trustedRepos.map(
-                        (name) => `repo:vizo-o/${name}:*`,
-                    ),
+                    [`${githubDomain}:sub`]: trustedRepos.flatMap((name) => [
+                        `repo:vizo-o/${name}:*`,
+                        `repo:vizo-o@*/${name}@*:*`,
+                    ]),
                 },
                 StringEquals: {
                     'token.actions.githubusercontent.com:aud': stsClientId,
