@@ -6,6 +6,8 @@
         "@aws-sdk/client-secrets-manager": "^3.1000.0"
     },
     "overrides": {
-        "fast-xml-parser": ">=5.5.7"
+        "fast-xml-parser": ">=5.5.7",
+        "basic-ftp": "6.2.2",
+        "@grpc/grpc-js": ">=1.14.5"
     }
 }
