@@ -83,6 +83,7 @@
             "fast-uri": "4.2.1"
         },
         "basic-ftp": "6.2.2",
-        "@grpc/grpc-js": ">=1.14.5"
+        "@grpc/grpc-js": ">=1.14.5",
+        "handlebars": "4.7.10"
     }
 }
